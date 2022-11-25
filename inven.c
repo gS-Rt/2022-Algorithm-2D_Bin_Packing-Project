@@ -1,5 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#define SIZE 10
+#include <Windows.h>
+#define SIZE 15
 /*
 선반 알고리즘을 이용한 2d bin packing 알고리즘
 아이디어: 물건들을 정렬한 뒤 가로부터 채워나가기, 가로 끝에 닿으면 가장 긴 물건 아래부터 재시작
@@ -18,51 +20,51 @@ typedef struct things { //인벤에 들어간 물건의 정보를 저장
     int theight;
 } things; //thing의 int변수란 의미로 그냥 앞에 t붙임
 
-int inven[SIZE][SIZE] = {0};
+int inven[SIZE][SIZE] = { 0 };
 
 void merge(item arr[], int left, int right) {
     int center = (left + right) / 2;
     int l = left, t = left, c = center + 1;
     item temp[100000];
-    
-    while(l <= center && c <= right) {
-        if(arr[l].height > arr[c].height)
+
+    while (l <= center && c <= right) {
+        if (arr[l].height > arr[c].height)
             temp[t++] = arr[l++];
-        else if(arr[l].height < arr[c].height)
+        else if (arr[l].height < arr[c].height)
             temp[t++] = arr[c++];
         else {
-            if(arr[l].width > arr[c].width)
+            if (arr[l].width > arr[c].width)
                 temp[t++] = arr[l++];
             else
                 temp[t++] = arr[c++];
         }
     }
-    
-    if(l <= center) {
-        while(l <= center) {
+
+    if (l <= center) {
+        while (l <= center) {
             temp[t++] = arr[l++];
         }
     }
     else {
-        while(c <= right) {
+        while (c <= right) {
             temp[t++] = arr[c++];
         }
     }
-    
-    while(left <= right) {
+
+    while (left <= right) {
         arr[left] = temp[left];
         left++;
     }
 }
 
 void mergeSort(item arr[], int left, int right) {
-    
-    if(left >= right)
+
+    if (left >= right)
         return;
-    
+
     int center = (left + right) / 2;
     mergeSort(arr, left, center);
-    mergeSort(arr,  center + 1, right);
+    mergeSort(arr, center + 1, right);
     merge(arr, left, right);
 }
 
@@ -77,24 +79,24 @@ int main()
 
     printf("물건의 수를 입력(최대 10): ");
     scanf("%d", &n);
-    
-    for(int i = 0; i < n; i++) {
+
+    for (int i = 0; i < n; i++) {
         int x, y;
-        printf("%d번 물건의 가로와 세로를 입력: ", i+1);
+        printf("%d번 물건의 가로와 세로를 입력: ", i + 1);
         scanf("%d %d", &x, &y);
         arr[i].width = x;
         arr[i].height = y;
         arr[i].id = i + 1;
     }
-    
+
     mergeSort(arr, 0, n - 1); //merge sort로 arr은 세로 긴 순, 세로가 같다면 가로 긴순으로 정렬됨. >> 가로로 쭉 이을 거기에 해봤음.
 
     do {
         isSame = 1;
         int longest = 0; //넣은 물건 중 가장 긴 세로, 다음 가로줄의 시작 좌표 판단용
         w = 0;
-        for(int i = 0; i < n; i ++) {
-            if(arr[i].width > SIZE - w || arr[i].height > SIZE - h) //넣을 수 없는 물건이면
+        for (int i = 0; i < n; i++) {
+            if (arr[i].width > SIZE - w || arr[i].height > SIZE - h) //넣을 수 없는 물건이면
                 continue;
             else {
                 isSame = 0;
@@ -105,29 +107,54 @@ int main()
                 inArr[index].ty = h;
                 arr[i].width = 21;
                 arr[i].width = 21; //넣은 물건 판단하려 그냥 넣음. 연결리스트같은거 쓰면 될거같은데 일단 걍 함.
-                if(longest < inArr[index].theight)
+                if (longest < inArr[index].theight)
                     longest = inArr[index].theight;
                 w += inArr[index].twidth;
                 index++;
             }
         }
         h += longest;
-    } while(!isSame);
+    } while (!isSame);
 
-    for(int i = 0; i < index; i++) {
-        for(int a = inArr[i].ty; a < inArr[i].ty + inArr[i].theight; a++) {
-            for(int b = inArr[i].tx; b < inArr[i].tx + inArr[i].twidth; b++) {
+    for (int i = 0; i < index; i++) {
+        for (int a = inArr[i].ty; a < inArr[i].ty + inArr[i].theight; a++) {
+            for (int b = inArr[i].tx; b < inArr[i].tx + inArr[i].twidth; b++) {
                 inven[a][b] = inArr[i].tid;
             }
         }
     }
-    
-    for(int i = 0; i < SIZE; i++) {
-        for(int j = 0; j < SIZE; j++) {
+
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (inven[i][j] == 0)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0);
+            else if (inven[i][j] == 1)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+            else if (inven[i][j] == 2)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+            else if (inven[i][j] == 3)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+            else if (inven[i][j] == 4)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+            else if (inven[i][j] == 5)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+            else if (inven[i][j] == 6)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+            else if (inven[i][j] == 7)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+            else if (inven[i][j] == 8)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+            else if (inven[i][j] == 9)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 5);
+            else if (inven[i][j] == 10)
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
+
             printf("%3d", inven[i][j]);
         }
         printf("\n");
     }
+
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
     return 0;
 }
