@@ -212,7 +212,7 @@ void main() {
 	int sum = 0;
 	node* things = NULL;
 
-	printf("배낭의 가로와 세로를 입력해주세요");
+	printf("배낭의 가로와 세로를 입력해주세요 : ");
 	scanf("%d %d", &gaRo, &seRo);
 
 	int** inven = (int**)malloc(sizeof(int*) * seRo); //배낭은 int 2차원 배열로 동적할당해 사용
@@ -226,11 +226,11 @@ void main() {
 		}
 	}
 
-	printf("물건의 수 입력");
+	printf("물건의 수 입력 : ");
 	scanf("%d", &n);
 
 	for (int i = 0; i < n; i++) {
-		printf("%d번의 너비, 높이, 가치 입력", i + 1);
+		printf("%d번의 너비, 높이, 가치 입력 : ", i + 1);
 		scanf("%d %d %d", &width, &height, &value);
 		addList(&things, width, height, i + 1, value);
 	}
